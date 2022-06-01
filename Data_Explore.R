@@ -137,3 +137,7 @@ final_data %>%
 
 final_data %>% 
   distinct(collection)
+
+final_data %>% 
+  # group_by(year)
+  distinct(year)
