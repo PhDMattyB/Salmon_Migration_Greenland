@@ -13,6 +13,13 @@ library(tidyverse)
 
 setwd('~/Salmond_Migration_Paper/')
 
+
+# Data cleaning -----------------------------------------------------------
+
+## we have 5 csv files all with the same data and duplicated cols
+## if we just create a year column they can be joined together
+## tidydata for the win folks
+
 Sal_80_90 = read_csv('WG1980_1990_indivAssign_byRegion.csv') %>% 
   dplyr::select(-repunit.y, 
          -mixture_collection.y) %>% 
@@ -112,3 +119,21 @@ final_data = bind_rows(clean_data,
 
 final_data %>% 
   write_csv('WG_clean_dataframe.csv')
+
+
+
+# Look at the data --------------------------------------------------------
+
+## Now we actually need to look at the data to figure
+## out what's going on 
+## Check out Bradbury 2016 and 2021 to figure out what 
+## the columns actually mean
+
+final_data = read_csv('WG_clean_dataframe.csv')
+
+
+final_data %>% 
+  distinct(mixture_collection)
+
+final_data %>% 
+  distinct(collection)
