@@ -141,3 +141,7 @@ final_data %>%
 final_data %>% 
   # group_by(year)
   distinct(year)
+
+final_data %>% 
+  group_by(year, 
+           mixture_collection)
