@@ -144,4 +144,5 @@ final_data %>%
 
 final_data %>% 
   group_by(year, 
-           mixture_collection)
+           mixture_collection) %>% 
+  View()
