@@ -80,7 +80,23 @@ map = addMarkers(map,
 
 ## get an average lat and long for the reporting groups
 
-WG_df
+mean_repunit = WG_df %>% 
+  dplyr::select(year, 
+                repunit, 
+                River, 
+                Lat, 
+                Long) %>% 
+  group_by(repunit) %>% 
+  na.omit() %>% 
+  summarise(mean_lat = mean(Lat), 
+            mean_long = mean(Long))
+
+map = leaflet()
+map = addTiles(map)
+map = addMarkers(map, 
+                 lng = mean_repunit$mean_lat, 
+                 lat = mean_repunit$mean_long, 
+                 popup = mean_repunit$repunit)
 
 # Change in proportion per time  ------------------------------------------
 
