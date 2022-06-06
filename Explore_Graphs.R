@@ -58,7 +58,6 @@ ggplot(mapping_data) +
                   cols = colnames(spread_data[,c(6:8)]))+
   coord_fixed()
 
-
 # leaflet package ---------------------------------------------------------
 library(leaflet)
 
