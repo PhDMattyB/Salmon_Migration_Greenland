@@ -13,6 +13,7 @@ library(tidyverse)
 WG_df = read_csv('WG_df_metadata_cleaned.csv')
 
 theme_set(theme_bw())
+
 # Maps package ---------------------------------------------------------------------
 library(maps)
 library(scatterpie)
