@@ -175,3 +175,29 @@ final_data %>%
 final_data %>% 
   # group_by(repunit)
   distinct(repunit)
+
+
+# Merging metadata --------------------------------------------------------
+
+final_data = read_csv('WG_clean_dataframe.csv') %>% 
+  dplyr::select(indiv, 
+                year, 
+                repunit, 
+                rep_pofz, 
+                mixture_collection, 
+                collection, 
+                PofZ, 
+                everything())
+
+dim(final_data)
+metadata1 = read_csv('WG_river_group_metadata.csv') %>% 
+  rename(repunit = `Reporting Group`, 
+         collection = Code)
+
+WG_df_metadata = left_join(final_data, 
+          metadata1) %>% 
+  select(-`Data Source`)
+
+dim(WG_df_metadata)
+
+metadata2 = read_csv('WG_Greenland_Fishery_metadata.csv')
