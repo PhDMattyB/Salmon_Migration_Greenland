@@ -207,10 +207,10 @@ dim(WG_df_metadata)
 
 ## We've got a finalized data set!!
 
-WG_df_metadata %>%
-  distinct(repunit) %>% 
-  arrange(repunit) %>% 
-  View()
+# WG_df_metadata %>%
+#   distinct(repunit) %>% 
+#   arrange(repunit) %>% 
+#   View()
 
 WG_df_metadata = mutate(.data = WG_df_metadata,
               origin_id = as.factor(case_when(
@@ -218,7 +218,29 @@ WG_df_metadata = mutate(.data = WG_df_metadata,
                 repunit == 'BPN' ~ 'North America', 
                 repunit == 'BRI' ~ 'Europe', 
                 repunit == 'ENS' ~ 'North America',
-                repunit == '' ~ '',)))
+                repunit == 'FRN' ~ 'Europe',
+                repunit == 'FTB' ~ 'North America',
+                repunit == 'GAS' ~ 'North America',
+                repunit == 'GL' ~ 'Europe',
+                repunit == 'GUL' ~ 'North America',
+                repunit == 'ICE' ~ 'Europe',
+                repunit == 'LAS' ~ 'North America',
+                repunit == 'LAC' ~ 'North America',
+                repunit == 'MEL' ~ 'North America',
+                repunit == 'NF1' ~ 'North America',
+                repunit == 'NF2' ~ 'North America',
+                repunit == 'NNF' ~ 'North America',
+                repunit == 'QLS' ~ 'North America',
+                repunit == 'QUE' ~ 'North America',
+                repunit == 'SJR' ~ 'North America',
+                repunit == 'SNO' ~ 'Europe',
+                repunit == 'SPN' ~ 'Europe',
+                repunit == 'UNG' ~ 'North America',
+                repunit == 'USA' ~ 'North America',
+                repunit == 'WNF' ~ 'North America')))
+
+WG_df_metadata %>% 
+  write_csv('WG_df_metadata_cleaned.csv')
 
 # -------------------------------------------------------------------------
 
