@@ -89,13 +89,15 @@ mean_repunit = WG_df %>%
   group_by(repunit) %>% 
   na.omit() %>% 
   summarise(mean_lat = mean(Lat), 
-            mean_long = mean(Long))
+            mean_long = mean(Long), 
+            median_lat = median(Lat), 
+            median_long = median(Long))
 
 map = leaflet()
 map = addTiles(map)
 map = addMarkers(map, 
-                 lng = mean_repunit$mean_lat, 
-                 lat = mean_repunit$mean_long, 
+                 lng = mean_repunit$median_lat, 
+                 lat = mean_repunit$median_long, 
                  popup = mean_repunit$repunit)
 
 # Change in proportion per time  ------------------------------------------
@@ -131,7 +133,7 @@ WG_prop = WG_df_year %>%
 WG_col = c('#023047', 
            '#e76f51')
 
-ggplot(data = WG_prop, 
+prop_origin = ggplot(data = WG_prop, 
        aes(x = year_fixed, 
            y = freq))+
   geom_bar(position = 'stack', 
@@ -148,3 +150,9 @@ ggplot(data = WG_prop,
         legend.title = element_blank(), 
         legend.text = element_text(size = 12))
 
+ggsave('~/Salmond_Migration_Paper/Figures/Proportion_EU_vs_NA.tiff', 
+       plot = prop_origin, 
+       dpi = 'retina', 
+       units = 'cm', 
+       height = 10, 
+       width = 15)
