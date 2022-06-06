@@ -12,3 +12,13 @@ library(tidyverse)
 
 WG_df = read_csv('WG_df_metadata_cleaned.csv')
 
+
+# Map ---------------------------------------------------------------------
+
+
+# Proportion orgin --------------------------------------------------------
+
+
+# Change in proportion per time  ------------------------------------------
+
+
