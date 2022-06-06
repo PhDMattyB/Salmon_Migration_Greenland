@@ -242,6 +242,5 @@ WG_df_metadata = mutate(.data = WG_df_metadata,
 WG_df_metadata %>% 
   write_csv('WG_df_metadata_cleaned.csv')
 
-# -------------------------------------------------------------------------
 
 
