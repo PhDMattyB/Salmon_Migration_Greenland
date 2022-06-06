@@ -143,9 +143,24 @@ final_data = read_csv('WG_clean_dataframe.csv') %>%
 final_data %>% 
   distinct(mixture_collection)
 
+## check supplementary table 1 in Bradbury et al., 2021 paper
+
+## collection is the river of origin - fine scale
+
+## reporting unit (repunit) is a broader group that the rivers
+## fit into.
+
+## mixture collection is where they were located in the 
+## west greeland fishery, I'm pretty sure
+
 final_data %>% 
-  distinct(collection) %>% 
-  View()
+  # distinct(collection) %>% 
+  filter(repunit == 'BRI') %>% 
+  # filter(collection %in% c('KUN', 
+  #                          'TOR', 
+  #                          'VIN'))
+  arrange(collection) %>% 
+  distinct(collection)
 
 final_data %>% 
   # group_by(year)
