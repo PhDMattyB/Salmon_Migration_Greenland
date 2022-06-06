@@ -129,14 +129,23 @@ final_data %>%
 ## Check out Bradbury 2016 and 2021 to figure out what 
 ## the columns actually mean
 
-final_data = read_csv('WG_clean_dataframe.csv')
+final_data = read_csv('WG_clean_dataframe.csv') %>% 
+  dplyr::select(indiv, 
+                year, 
+                repunit, 
+                rep_pofz, 
+                mixture_collection, 
+                collection, 
+                PofZ, 
+                everything())
 
 
 final_data %>% 
   distinct(mixture_collection)
 
 final_data %>% 
-  distinct(collection)
+  distinct(collection) %>% 
+  View()
 
 final_data %>% 
   # group_by(year)
@@ -146,3 +155,8 @@ final_data %>%
   group_by(year, 
            mixture_collection) %>% 
   View()
+
+
+final_data %>% 
+  # group_by(repunit)
+  distinct(repunit)
