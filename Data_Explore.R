@@ -200,4 +200,26 @@ WG_df_metadata = left_join(final_data,
 
 dim(WG_df_metadata)
 
-metadata2 = read_csv('WG_Greenland_Fishery_metadata.csv')
+## Don't really need the metadata2 file
+## the mixture collection data is all from Greenland
+# metadata2 = read_csv('WG_Greenland_Fishery_metadata.csv') %>% 
+#   rename(mixture_collection = Location_code)
+
+## We've got a finalized data set!!
+
+WG_df_metadata %>%
+  distinct(repunit) %>% 
+  arrange(repunit) %>% 
+  View()
+
+WG_df_metadata = mutate(.data = WG_df_metadata,
+              origin_id = as.factor(case_when(
+                repunit == 'ANT' ~ 'North America',
+                repunit == 'BPN' ~ 'North America', 
+                repunit == 'BRI' ~ 'Europe', 
+                repunit == 'ENS' ~ 'North America',
+                repunit == '' ~ '',)))
+
+# -------------------------------------------------------------------------
+
+
