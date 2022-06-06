@@ -205,7 +205,6 @@ dim(WG_df_metadata)
 # metadata2 = read_csv('WG_Greenland_Fishery_metadata.csv') %>% 
 #   rename(mixture_collection = Location_code)
 
-## We've got a finalized data set!!
 
 # WG_df_metadata %>%
 #   distinct(repunit) %>% 
@@ -239,6 +238,7 @@ WG_df_metadata = mutate(.data = WG_df_metadata,
                 repunit == 'USA' ~ 'North America',
                 repunit == 'WNF' ~ 'North America')))
 
+## We've got a finalized data set!!
 WG_df_metadata %>% 
   write_csv('WG_df_metadata_cleaned.csv')
 
