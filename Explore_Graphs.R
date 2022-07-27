@@ -244,10 +244,16 @@ setwd('~/Salmond_Migration_Paper/Worldclim_data/')
 
 # precip_01 = raster::raster("wc2.1_30s_prec_01.tif") 
 
+precip_1980_01 = raster::raster('wc2.1_2.5m_prec_1980-01.tif')
+
+# WG_df_metadata %>% distinct(year)
+
 LatLong = WG_df_metadata %>% 
+  filter(year %in% c('1983', 
+                     '1984')) %>% 
   dplyr::select(Lat, 
                 Long) %>% 
-  arrange(Lat) %>% 
+  arrange(Lat) %>%
   as.data.frame() 
 
 Lat = as.numeric(LatLong$Lat)
@@ -258,9 +264,16 @@ LatLong = bind_cols(Lat, Long) %>%
          Long = ...2)
 
 # precip_01_data = raster::extract(precip_01, LatLong)
+precip_1980_01 = raster::extract(precip_1980_01, LatLong)
+
+test = precip_1980_01 %>% 
+  as_tibble() %>% 
+  rename(precip = value) %>% 
+  mutate(Month = '01', 
+         Year = '1980')
 
 
-
+View(test)
 
 # magnetic field data -----------------------------------------------------
 
