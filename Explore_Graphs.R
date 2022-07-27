@@ -216,3 +216,12 @@ ggsave('~/Salmond_Migration_Paper/Figures/Proportion_EU_vs_NA.tiff',
        units = 'cm', 
        height = 10, 
        width = 15)
+
+
+# Distance to Greenland ---------------------------------------------------
+install.packages('marmap')
+library(marmap)
+
+WG_df_metadata
+WG_df_year %>% 
+  View()
