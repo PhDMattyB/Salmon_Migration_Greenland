@@ -25,6 +25,14 @@ class(world)
 plot_data = WG_df %>% 
   na.omit()
 
+plot_data = WG_df %>% 
+  dplyr::select(-collection.x, 
+                -log_likelihood, 
+                -z_score,
+                -n_non_miss_loci, 
+                -n_miss_loci) %>% 
+  na.omit(Lat,
+          Long) 
 # plot_data %>% 
 #   filter(Lat <= 10.0)
 
@@ -61,7 +69,7 @@ plot_90s = plot_data %>%
   filter(year %in% c('1996', 
                      '1997', 
                      '1998')) %>% 
-  filter(Lat > 10.0)
+  filter(Lat > 30.0)
 
 #plot a sub region
 lat_min_90 = min(plot_90s$Lat)
@@ -88,10 +96,12 @@ study_range_90s = ggplot(data = world) +
 
 
 plot_2000 = plot_data %>% 
-  filter(year %in% c('2019', 
+  filter(year %in% c('2017, 
+                      2018,
+                     2019', 
                      '2020', 
                      '2021')) %>% 
-  filter(Lat > 10.0)
+  filter(Lat > 30.0)
 
 #plot a sub region
 lat_min_2000 = min(plot_2000$Lat)
@@ -128,7 +138,7 @@ ggsave(file = '~/Salmond_Migration_Paper/Figures/Study_Locations_Overtime.tiff',
 
 
 whole_dataset = plot_data %>% 
-  filter(Lat > 10.0)
+  filter(Lat > 30.0)
 
 lat_min = min(whole_dataset$Lat)
 lat_max = max(whole_dataset$Lat)

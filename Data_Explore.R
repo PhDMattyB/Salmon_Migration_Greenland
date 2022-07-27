@@ -195,14 +195,15 @@ metadata1 = read_csv('WG_river_group_metadata.csv') %>%
          collection = Code)
 
 WG_df_metadata = left_join(final_data, 
-          metadata1) %>% 
+          metadata1, 
+          by = 'repunit') %>% 
   select(-`Data Source`)
 
 dim(WG_df_metadata)
 
 ## Don't really need the metadata2 file
 ## the mixture collection data is all from Greenland
-# metadata2 = read_csv('WG_Greenland_Fishery_metadata.csv') %>% 
+# metadata2 = read_csv('WG_Greenland_Fishery_metadata.csv') %>%
 #   rename(mixture_collection = Location_code)
 
 
