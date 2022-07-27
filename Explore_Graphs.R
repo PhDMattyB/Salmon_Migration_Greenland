@@ -236,3 +236,41 @@ WG_df_metadata
 WG_df_year %>% 
   View()
 
+
+# world_clim data ---------------------------------------------------------
+library(raster)
+
+setwd('~/Salmond_Migration_Paper/Worldclim_data/')
+
+# precip_01 = raster::raster("wc2.1_30s_prec_01.tif") 
+
+LatLong = WG_df_metadata %>% 
+  dplyr::select(Lat, 
+                Long) %>% 
+  arrange(Lat) %>% 
+  as.data.frame() 
+
+Lat = as.numeric(LatLong$Lat)
+Long = as.numeric(LatLong$Long)
+
+LatLong = bind_cols(Lat, Long) %>% 
+  rename(Lat = ...1, 
+         Long = ...2)
+
+# precip_01_data = raster::extract(precip_01, LatLong)
+
+
+
+
+# magnetic field data -----------------------------------------------------
+
+
+
+# Linear models per year ------------------------------------------
+
+
+
+# Linear mixed effect model(s) --------------------------------------------
+
+
+
