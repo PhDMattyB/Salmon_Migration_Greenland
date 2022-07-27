@@ -244,13 +244,16 @@ setwd('~/Salmond_Migration_Paper/Worldclim_data/')
 
 # precip_01 = raster::raster("wc2.1_30s_prec_01.tif") 
 
-precip_1980_01 = raster::raster('wc2.1_2.5m_prec_1980-01.tif')
+precip_1983_01 = raster::raster('wc2.1_2.5m_prec_1983-01.tif')
 
 # WG_df_metadata %>% distinct(year)
 
-LatLong = WG_df_metadata %>% 
-  filter(year %in% c('1983', 
-                     '1984')) %>% 
+data_1983 = WG_df_metadata %>% 
+  filter(year == '1983')
+
+LatLong = data_1983 %>% 
+  # filter(year %in% c('1983', 
+  #                    '1984')) %>% 
   dplyr::select(Lat, 
                 Long) %>% 
   arrange(Lat) %>%
@@ -264,14 +267,16 @@ LatLong = bind_cols(Lat, Long) %>%
          Long = ...2)
 
 # precip_01_data = raster::extract(precip_01, LatLong)
-precip_1980_01 = raster::extract(precip_1980_01, LatLong)
+precip_1983_01 = raster::extract(precip_1983_01, LatLong)
 
-test = precip_1980_01 %>% 
+test = precip_1983_01 %>% 
   as_tibble() %>% 
   rename(precip = value) %>% 
   mutate(Month = '01', 
-         Year = '1980')
+         Year = '1983')
 
+## Cannot seem to get the data for the lat long coordinates from the 80s
+test %>% distinct(precip)
 
 View(test)
 
