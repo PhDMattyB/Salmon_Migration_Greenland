@@ -30,15 +30,11 @@ plot_data = WG_df %>%
 plot_80s = plot_data %>% 
   filter(year %in% c('1983', 
                      '1984'))
-
 #plot a sub region
 lat_min_80 = min(plot_80s$Lat)
 lat_max_80 = max(plot_80s$Lat)
 long_min_80 = min(plot_80s$Long)
 long_max_80 = max(plot_80s$Long)
-
-
-# table(data$n.extract)
 
 study_range_80s = ggplot(data = world) +
   geom_sf() +
@@ -57,6 +53,37 @@ study_range_80s = ggplot(data = world) +
         axis.title = element_blank(), 
         axis.text = element_text(size = 12))
 
+plot_data %>% 
+  distinct(year)
+
+plot_90s = plot_data %>% 
+  filter(year %in% c('1996', 
+                     '1997', 
+                     '1998')) %>% 
+  filter(Lat > 10.0)
+
+#plot a sub region
+lat_min_90 = min(plot_90s$Lat)
+lat_max_90 = max(plot_90s$Lat)
+long_min_90 = min(plot_90s$Long)
+long_max_90 = max(plot_90s$Long)
+
+study_range_90s = ggplot(data = world) +
+  geom_sf() +
+  coord_sf(xlim = c(long_min_90 - 2, 
+                    long_max_90 + 2), 
+           ylim = c(lat_min_90 - 2, 
+                    lat_max_90 + 2), 
+           expand = FALSE) +
+  # labs()+
+  geom_point(data = plot_90s, 
+             aes(x = Long, 
+                 y = Lat), 
+             size = 2, 
+             col = '#8338ec')+
+  theme(panel.grid = element_blank(), 
+        axis.title = element_blank(), 
+        axis.text = element_text(size = 12))
 
 
 
