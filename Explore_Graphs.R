@@ -15,39 +15,47 @@ WG_df = read_csv('WG_df_metadata_cleaned.csv')
 theme_set(theme_bw())
 
 # Maps package ---------------------------------------------------------------------
-plot_data = WG_df %>% 
-  na.omit()
-
-# plot_data %>% 
-#   filter(Lat <= 10.0)
-
-
 library(sf)
 library(rnaturalearth)
 
 world = ne_countries(scale = "medium", returnclass = "sf")
 class(world)
 
+plot_data = WG_df %>% 
+  na.omit()
+
+# plot_data %>% 
+#   filter(Lat <= 10.0)
+
+plot_80s = plot_data %>% 
+  filter(year %in% c('1983', 
+                     '1984'))
+
 #plot a sub region
-lat_min = min(plot_data$Lat)
-lat_max = max(plot_data$Lat)
-long_min = min(plot_data$Long)
-long_max = max(plot_data$Long)
+lat_min_80 = min(plot_80s$Lat)
+lat_max_80 = max(plot_80s$Lat)
+long_min_80 = min(plot_80s$Long)
+long_max_80 = max(plot_80s$Long)
 
 
 # table(data$n.extract)
 
-study_range = ggplot(data = world) +
+study_range_80s = ggplot(data = world) +
   geom_sf() +
-  coord_sf(xlim = c(long_min - 2, 
-                    long_max + 2), 
-           ylim = c(lat_min - 2, 
-                    lat_max + 2), 
+  coord_sf(xlim = c(long_min_80 - 2, 
+                    long_max_80 + 2), 
+           ylim = c(lat_min_80 - 2, 
+                    lat_max_80 + 2), 
            expand = FALSE) +
-  labs()+
-  geom_point(data = plot_data, 
+  # labs()+
+  geom_point(data = plot_80s, 
              aes(x = Long, 
-                 y = Lat))
+                 y = Lat), 
+             size = 2, 
+             col = '#3a86ff')+
+  theme(panel.grid = element_blank(), 
+        axis.title = element_blank(), 
+        axis.text = element_text(size = 12))
 
 
 
