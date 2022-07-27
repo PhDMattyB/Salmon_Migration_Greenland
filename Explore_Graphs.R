@@ -17,6 +17,7 @@ theme_set(theme_bw())
 # Maps package ---------------------------------------------------------------------
 library(sf)
 library(rnaturalearth)
+library(patchwork)
 
 world = ne_countries(scale = "medium", returnclass = "sf")
 class(world)
@@ -43,7 +44,7 @@ study_range_80s = ggplot(data = world) +
            ylim = c(lat_min_80 - 2, 
                     lat_max_80 + 2), 
            expand = FALSE) +
-  # labs()+
+  labs(title = 'B)')+
   geom_point(data = plot_80s, 
              aes(x = Long, 
                  y = Lat), 
@@ -75,8 +76,38 @@ study_range_90s = ggplot(data = world) +
            ylim = c(lat_min_90 - 2, 
                     lat_max_90 + 2), 
            expand = FALSE) +
-  # labs()+
+  labs(title = 'C)')+
   geom_point(data = plot_90s, 
+             aes(x = Long, 
+                 y = Lat), 
+             size = 2, 
+             col = '#ff006e')+
+  theme(panel.grid = element_blank(), 
+        axis.title = element_blank(), 
+        axis.text = element_text(size = 12))
+
+
+plot_2000 = plot_data %>% 
+  filter(year %in% c('2019', 
+                     '2020', 
+                     '2021')) %>% 
+  filter(Lat > 10.0)
+
+#plot a sub region
+lat_min_2000 = min(plot_2000$Lat)
+lat_max_2000 = max(plot_2000$Lat)
+long_min_2000 = min(plot_2000$Long)
+long_max_2000 = max(plot_2000$Long)
+
+study_range_2000s = ggplot(data = world) +
+  geom_sf() +
+  coord_sf(xlim = c(long_min_2000 - 2, 
+                    long_max_2000 + 2), 
+           ylim = c(lat_min_2000 - 2, 
+                    lat_max_2000 + 2), 
+           expand = FALSE) +
+  labs(title = 'D)')+
+  geom_point(data = plot_2000, 
              aes(x = Long, 
                  y = Lat), 
              size = 2, 
@@ -85,93 +116,49 @@ study_range_90s = ggplot(data = world) +
         axis.title = element_blank(), 
         axis.text = element_text(size = 12))
 
+combo_loc_plots = study_range_80s|study_range_90s|study_range_2000s
+
+ggsave(file = '~/Salmond_Migration_Paper/Figures/Study_Locations_Overtime.tiff', 
+       plot = combo_loc_plots, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 30, 
+       height = 20)
 
 
 
-# library(maps)
-# library(scatterpie)
+whole_dataset = plot_data %>% 
+  filter(Lat > 10.0)
 
-# pops = map_data('world') %>% 
-#   filter(region %in% c('Canada',
-#                        'Greenland', 
-#                        'Norway', 
-#                        'Iceland', 
-#                        'UK', 
-#                        'state'))%>% 
-#   as_tibble()
-# 
-# maine = 
-#   map_data('state') %>%
-#   filter(region == 'maine') %>% 
-#   as_tibble()
-# 
-# mapping_data = bind_rows(pops, 
-#                          maine)
-# 
-# 
-# ggplot(mapping_data) +
-#   geom_map(data = mapping_data, 
-#            map = mapping_data, 
-#            aes(x = long, 
-#                y = lat, 
-#                map_id = region), 
-#            col = 'white', 
-#            fill = 'black')+
-#   labs(x = 'Longitude', 
-#        y = 'Latitude')+
-#   # scale_fill_manual(values = map_palette)+
-#   theme(axis.title = element_text(size = 14), 
-#         axis.text = element_text(size = 12), 
-#         legend.title = element_text(size = 14), 
-#         legend.text = element_text(size = 12))+
-#   geom_scatterpie(data = spread_data, 
-#                   aes(x = Longitude, 
-#                       y = Latitude, 
-#                       group = Population), 
-#                   pie_scale = 0.75, 
-#                   cols = colnames(spread_data[,c(6:8)]))+
-#   coord_fixed()
+lat_min = min(whole_dataset$Lat)
+lat_max = max(whole_dataset$Lat)
+long_min = min(whole_dataset$Long)
+long_max = max(whole_dataset$Long)
 
-# leaflet package ---------------------------------------------------------
-library(leaflet)
-
-## This plots all rivers where fish were collected
-Sites = WG_df %>%
-  dplyr::select(repunit,
-                River,
-                Lat,
-                Long) %>%
-  as.data.frame()
-
-map = leaflet()
-map = addTiles(map)
-map = addMarkers(map, 
-                 lng = Sites$Long, 
-                 lat = Sites$Lat, 
-                 popup = Sites$repunit)
+study_range = ggplot(data = world) +
+  geom_sf() +
+  coord_sf(xlim = c(long_min - 2, 
+                    long_max + 2), 
+           ylim = c(lat_min - 2, 
+                    lat_max + 2), 
+           expand = FALSE) +
+  labs(title = 'A)')+
+  geom_point(data = whole_dataset, 
+             aes(x = Long, 
+                 y = Lat), 
+             size = 2, 
+             col = '#fb5607')+
+  theme(panel.grid = element_blank(), 
+        axis.title = element_blank(), 
+        axis.text = element_text(size = 12))
 
 
-## get an average lat and long for the reporting groups
-
-mean_repunit = WG_df %>% 
-  dplyr::select(year, 
-                repunit, 
-                River, 
-                Lat, 
-                Long) %>% 
-  group_by(repunit) %>% 
-  na.omit() %>% 
-  summarise(mean_lat = mean(Lat), 
-            mean_long = mean(Long), 
-            median_lat = median(Lat), 
-            median_long = median(Long))
-
-map = leaflet()
-map = addTiles(map)
-map = addMarkers(map, 
-                 lng = mean_repunit$median_lat, 
-                 lat = mean_repunit$median_long, 
-                 popup = mean_repunit$repunit)
+ggsave(file = '~/Salmond_Migration_Paper/Figures/Study_Locations_whole_period.tiff', 
+       plot = study_range, 
+       dpi = 'retina', 
+       units = 'cm', 
+       width = 20, 
+       height = 10)
 
 # Change in proportion per time  ------------------------------------------
 
