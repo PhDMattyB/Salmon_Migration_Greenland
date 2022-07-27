@@ -15,49 +15,87 @@ WG_df = read_csv('WG_df_metadata_cleaned.csv')
 theme_set(theme_bw())
 
 # Maps package ---------------------------------------------------------------------
-library(maps)
-library(scatterpie)
+plot_data = WG_df %>% 
+  na.omit()
 
-pops = map_data('world') %>% 
-  filter(region %in% c('Canada',
-                       'Greenland', 
-                       'Norway', 
-                       'Iceland', 
-                       'UK', 
-                       'state'))%>% 
-  as_tibble()
-
-maine = 
-  map_data('state') %>%
-  filter(region == 'maine') %>% 
-  as_tibble()
-
-mapping_data = bind_rows(pops, 
-                         maine)
+# plot_data %>% 
+#   filter(Lat <= 10.0)
 
 
-ggplot(mapping_data) +
-  geom_map(data = mapping_data, 
-           map = mapping_data, 
-           aes(x = long, 
-               y = lat, 
-               map_id = region), 
-           col = 'white', 
-           fill = 'black')+
-  labs(x = 'Longitude', 
-       y = 'Latitude')+
-  # scale_fill_manual(values = map_palette)+
-  theme(axis.title = element_text(size = 14), 
-        axis.text = element_text(size = 12), 
-        legend.title = element_text(size = 14), 
-        legend.text = element_text(size = 12))+
-  geom_scatterpie(data = spread_data, 
-                  aes(x = Longitude, 
-                      y = Latitude, 
-                      group = Population), 
-                  pie_scale = 0.75, 
-                  cols = colnames(spread_data[,c(6:8)]))+
-  coord_fixed()
+library(sf)
+library(rnaturalearth)
+
+world = ne_countries(scale = "medium", returnclass = "sf")
+class(world)
+
+#plot a sub region
+lat_min = min(plot_data$Lat)
+lat_max = max(plot_data$Lat)
+long_min = min(plot_data$Long)
+long_max = max(plot_data$Long)
+
+
+# table(data$n.extract)
+
+study_range = ggplot(data = world) +
+  geom_sf() +
+  coord_sf(xlim = c(long_min - 2, 
+                    long_max + 2), 
+           ylim = c(lat_min - 2, 
+                    lat_max + 2), 
+           expand = FALSE) +
+  labs()+
+  geom_point(data = plot_data, 
+             aes(x = Long, 
+                 y = Lat))
+
+
+
+
+
+# library(maps)
+# library(scatterpie)
+
+# pops = map_data('world') %>% 
+#   filter(region %in% c('Canada',
+#                        'Greenland', 
+#                        'Norway', 
+#                        'Iceland', 
+#                        'UK', 
+#                        'state'))%>% 
+#   as_tibble()
+# 
+# maine = 
+#   map_data('state') %>%
+#   filter(region == 'maine') %>% 
+#   as_tibble()
+# 
+# mapping_data = bind_rows(pops, 
+#                          maine)
+# 
+# 
+# ggplot(mapping_data) +
+#   geom_map(data = mapping_data, 
+#            map = mapping_data, 
+#            aes(x = long, 
+#                y = lat, 
+#                map_id = region), 
+#            col = 'white', 
+#            fill = 'black')+
+#   labs(x = 'Longitude', 
+#        y = 'Latitude')+
+#   # scale_fill_manual(values = map_palette)+
+#   theme(axis.title = element_text(size = 14), 
+#         axis.text = element_text(size = 12), 
+#         legend.title = element_text(size = 14), 
+#         legend.text = element_text(size = 12))+
+#   geom_scatterpie(data = spread_data, 
+#                   aes(x = Longitude, 
+#                       y = Latitude, 
+#                       group = Population), 
+#                   pie_scale = 0.75, 
+#                   cols = colnames(spread_data[,c(6:8)]))+
+#   coord_fixed()
 
 # leaflet package ---------------------------------------------------------
 library(leaflet)
