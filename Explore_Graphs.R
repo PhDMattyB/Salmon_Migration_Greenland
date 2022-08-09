@@ -246,6 +246,7 @@ setwd('~/Salmond_Migration_Paper/Worldclim_data/')
 
 precip_1983_01 = raster::raster('wc2.1_2.5m_prec_1983-01.tif')
 
+# precip_1983_01@
 # WG_df_metadata %>% distinct(year)
 
 data_1983 = WG_df_metadata %>% 
@@ -264,12 +265,20 @@ Long = as.numeric(LatLong$Long)
 
 LatLong = bind_cols(Lat, Long) %>% 
   rename(Lat = ...1, 
-         Long = ...2)
+         Long = ...2) %>% 
+  na.omit()
 
+
+points <- SpatialPoints(LatLong, proj4string = precip_1983_01@crs)
 # precip_01_data = raster::extract(precip_01, LatLong)
-precip_1983_01 = raster::extract(precip_1983_01, LatLong)
+precip_1983_01_extract = raster::extract(precip_1983_01, points)
+# 
+# df_1983_01 = cbind.data.frame(coordinates(points),
+#                               precip_1983_01_extract) %>% 
+#   as_tibble() %>% 
+#   distinct(precip_1983_01_extract)
 
-test = precip_1983_01 %>% 
+test = precip_1983_01_extract %>% 
   as_tibble() %>% 
   rename(precip = value) %>% 
   mutate(Month = '01', 
