@@ -285,38 +285,89 @@ setwd('~/Salmond_Migration_Paper/Worldclim_data/Historical_bioclimatic_data/')
 ## for each year for each variable. That's going to be a lot of
 ## mindless coding and function creating. 
 bio1 = raster::raster('wc2.1_30s_bio_1.tif')
+bio2 = raster::raster('wc2.1_30s_bio_2.tif')
+bio3 = raster::raster('wc2.1_30s_bio_3.tif')
+bio4 = raster::raster('wc2.1_30s_bio_4.tif')
+bio5 = raster::raster('wc2.1_30s_bio_5.tif')
+bio6 = raster::raster('wc2.1_30s_bio_6.tif')
+bio7 = raster::raster('wc2.1_30s_bio_7.tif')
+bio8 = raster::raster('wc2.1_30s_bio_8.tif')
+bio9 = raster::raster('wc2.1_30s_bio_9.tif')
+bio10 = raster::raster('wc2.1_30s_bio_10.tif')
+bio11 = raster::raster('wc2.1_30s_bio_11.tif')
+bio12 = raster::raster('wc2.1_30s_bio_12.tif')
+bio13 = raster::raster('wc2.1_30s_bio_13.tif')
+bio14 = raster::raster('wc2.1_30s_bio_14.tif')
+bio15 = raster::raster('wc2.1_30s_bio_15.tif')
+bio16 = raster::raster('wc2.1_30s_bio_16.tif')
+bio17 = raster::raster('wc2.1_30s_bio_17.tif')
+bio18 = raster::raster('wc2.1_30s_bio_18.tif')
+bio19 = raster::raster('wc2.1_30s_bio_19.tif')
+
 
 data_1980s = WG_df_metadata %>% 
   filter(year %in% c('1983', 
                      '1984')) %>% 
   na.omit()
 
-LatLong = data_1980s %>% 
-  dplyr::select(Long, 
-                Lat) %>% 
-  arrange(Lat) %>%
-  as.data.frame() 
+latlong_generator = function(data){
+  LatLong = data_1980s %>% 
+    dplyr::select(Long, 
+                  Lat) %>% 
+    # arrange(Lat) %>%
+    as.data.frame() 
+  
+  Lat = as.numeric(LatLong$Lat)
+  Long = as.numeric(LatLong$Long)
+  
+  LatLong = bind_cols(Long, Lat) %>% 
+    rename(Long = ...1, 
+           Lat = ...2) %>% 
+    na.omit()
+}
 
-Lat = as.numeric(LatLong$Lat)
-Long = as.numeric(LatLong$Long)
+coords = latlong_generator(data_1980s)
 
-LatLong = bind_cols(Long, Lat) %>% 
-  rename(Long = ...1, 
-         Lat = ...2) %>% 
-  na.omit()
-
-bio1_80s_extract = raster::extract(bio1, LatLong)
-
-bio1_80s_data = bio1_80s_extract %>% 
+bio1_data = raster::extract(bio1, coords) %>% 
   as_tibble() %>% 
   rename(bio1 = value) %>% 
   mutate(Year = '1980')
 
-sum(is.na(bio1_80s_data))
+bio2_data = raster::extract(bio2, coords) %>% 
+  as_tibble() %>% 
+  rename(bio2 = value) %>% 
+  mutate(Year = '1980')
 
-bind_cols(data_1980s, 
-          bio1_80s_data) %>% 
-  View()
+bio2_data = raster::extract(bio2, coords) %>% 
+  as_tibble() %>% 
+  rename(bio2 = value) %>% 
+  mutate(Year = '1980')
+bio2_data = raster::extract(bio2, coords) %>% 
+  as_tibble() %>% 
+  rename(bio2 = value) %>% 
+  mutate(Year = '1980')
+
+bio2_data = raster::extract(bio2, coords) %>% 
+  as_tibble() %>% 
+  rename(bio2 = value) %>% 
+  mutate(Year = '1980')
+bio2_data = raster::extract(bio2, coords) %>% 
+  as_tibble() %>% 
+  rename(bio2 = value) %>% 
+  mutate(Year = '1980')
+bio2_data = raster::extract(bio2, coords) %>% 
+  as_tibble() %>% 
+  rename(bio2 = value) %>% 
+  mutate(Year = '1980')
+bio2_data = raster::extract(bio2, coords) %>% 
+  as_tibble() %>% 
+  rename(bio2 = value) %>% 
+  mutate(Year = '1980')
+
+
+
+bioclim_data = bind_cols(data_1980s, 
+          bio1_80s_extract) 
 
 # magnetic field data -----------------------------------------------------
 
