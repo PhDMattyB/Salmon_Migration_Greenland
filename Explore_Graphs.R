@@ -278,17 +278,18 @@ precip_1983_01_data = precip_1983_01_extract %>%
 
 library(raster)
 
-setwd('~/Salmond_Migration_Paper/Worldclim_data/')
+setwd('~/Salmond_Migration_Paper/Worldclim_data/Historical_bioclimatic_data/')
 
 # precip_01 = raster::raster("wc2.1_30s_prec_01.tif") 
 ## If we do it this way be have to come up with an average
 ## for each year for each variable. That's going to be a lot of
 ## mindless coding and function creating. 
-bio1 = raster::raster('.tif')
+bio1 = raster::raster('wc2.1_30s_bio_1.tif')
 
 data_1980s = WG_df_metadata %>% 
   filter(year %in% c('1983', 
-                     '1984'))
+                     '1984')) %>% 
+  na.omit()
 
 LatLong = data_1980s %>% 
   dplyr::select(Long, 
@@ -311,6 +312,11 @@ bio1_80s_data = bio1_80s_extract %>%
   rename(bio1 = value) %>% 
   mutate(Year = '1980')
 
+sum(is.na(bio1_80s_data))
+
+bind_cols(data_1980s, 
+          bio1_80s_data) %>% 
+  View()
 
 # magnetic field data -----------------------------------------------------
 
