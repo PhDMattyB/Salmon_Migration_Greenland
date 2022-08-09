@@ -242,6 +242,22 @@ library(raster)
 
 setwd('~/Salmond_Migration_Paper/Worldclim_data/')
 
+latlong_generator = function(data){
+  LatLong = data_1980s %>%
+    dplyr::select(Long,
+                  Lat) %>%
+    # arrange(Lat) %>%
+    as.data.frame()
+  
+  Lat = as.numeric(LatLong$Lat)
+  Long = as.numeric(LatLong$Long)
+  
+  LatLong = bind_cols(Long, Lat) %>%
+    rename(Long = ...1,
+           Lat = ...2) %>%
+    na.omit()
+}
+
 # precip_01 = raster::raster("wc2.1_30s_prec_01.tif") 
 ## If we do it this way be have to come up with an average
 ## for each year for each variable. That's going to be a lot of
@@ -251,19 +267,9 @@ precip_1983_01 = raster::raster('wc2.1_2.5m_prec_1983-01.tif')
 data_1983 = WG_df_metadata %>% 
   filter(year == '1983')
 
-LatLong = data_1983 %>% 
-  dplyr::select(Long, 
-                Lat) %>% 
-  arrange(Lat) %>%
-  as.data.frame() 
 
-Lat = as.numeric(LatLong$Lat)
-Long = as.numeric(LatLong$Long)
 
-LatLong = bind_cols(Long, Lat) %>% 
-  rename(Long = ...1, 
-         Lat = ...2) %>% 
-  na.omit()
+coords = latlong_generator(data_1980s)
 
 precip_1983_01_extract = raster::extract(precip_1983_01, LatLong)
 
