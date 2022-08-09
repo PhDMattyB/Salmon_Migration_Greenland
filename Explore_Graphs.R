@@ -246,48 +246,31 @@ setwd('~/Salmond_Migration_Paper/Worldclim_data/')
 
 precip_1983_01 = raster::raster('wc2.1_2.5m_prec_1983-01.tif')
 
-# precip_1983_01@
-# WG_df_metadata %>% distinct(year)
-
 data_1983 = WG_df_metadata %>% 
   filter(year == '1983')
 
 LatLong = data_1983 %>% 
-  # filter(year %in% c('1983', 
-  #                    '1984')) %>% 
-  dplyr::select(Lat, 
-                Long) %>% 
+  dplyr::select(Long, 
+                Lat) %>% 
   arrange(Lat) %>%
   as.data.frame() 
 
 Lat = as.numeric(LatLong$Lat)
 Long = as.numeric(LatLong$Long)
 
-LatLong = bind_cols(Lat, Long) %>% 
-  rename(Lat = ...1, 
-         Long = ...2) %>% 
+LatLong = bind_cols(Long, Lat) %>% 
+  rename(Long = ...1, 
+         Lat = ...2) %>% 
   na.omit()
 
+precip_1983_01_extract = raster::extract(precip_1983_01, LatLong)
 
-points <- SpatialPoints(LatLong, proj4string = precip_1983_01@crs)
-# precip_01_data = raster::extract(precip_01, LatLong)
-precip_1983_01_extract = raster::extract(precip_1983_01, points)
-# 
-# df_1983_01 = cbind.data.frame(coordinates(points),
-#                               precip_1983_01_extract) %>% 
-#   as_tibble() %>% 
-#   distinct(precip_1983_01_extract)
-
-test = precip_1983_01_extract %>% 
+precip_1983_01_data = precip_1983_01_extract %>% 
   as_tibble() %>% 
   rename(precip = value) %>% 
   mutate(Month = '01', 
          Year = '1983')
 
-## Cannot seem to get the data for the lat long coordinates from the 80s
-test %>% distinct(precip)
-
-View(test)
 
 # magnetic field data -----------------------------------------------------
 
