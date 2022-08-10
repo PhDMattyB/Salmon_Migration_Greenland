@@ -285,7 +285,11 @@ Precip_1980s = list.files(pattern = "*.tif")
 Precip_1980s = lapply(Precip_1980s, raster::raster) 
 coords = latlong_generator(data_1980s)
 Precip_1980s = lapply(Precip_1980s, extract, y = LatLong)
-  
+Precip_1980s = bind_cols(Precip_1980s)
+
+Precip_1980s = bind_cols(LatLong, 
+                         Precip_1980s)
+
 # Wordclim historical bioclimatic data ------------------------------------
 ## Not going to work... averaged from the 70s-2000
 # 
