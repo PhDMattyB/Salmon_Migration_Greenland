@@ -284,9 +284,7 @@ setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_1980/')
 Precip_1980s = list.files(pattern = "*.tif") 
 Precip_1980s = lapply(Precip_1980s, raster::raster) 
 coords = latlong_generator(data_1980s)
-# Precip_1980_extract = lapply(Precip_1980s, 
-#                              raster::extract(Precip_1980s, LatLong))
-lapply(Precip_1980s, extract, y = LatLong)
+Precip_1980s = lapply(Precip_1980s, extract, y = LatLong)
   
 # Wordclim historical bioclimatic data ------------------------------------
 ## Not going to work... averaged from the 70s-2000
