@@ -262,12 +262,11 @@ latlong_generator = function(data){
 ## If we do it this way be have to come up with an average
 ## for each year for each variable. That's going to be a lot of
 ## mindless coding and function creating. 
+## This code works for a single .tif file
 precip_1983_01 = raster::raster('wc2.1_2.5m_prec_1983-01.tif')
 
 data_1983 = WG_df_metadata %>% 
   filter(year == '1983')
-
-
 
 coords = latlong_generator(data_1980s)
 
@@ -279,7 +278,16 @@ precip_1983_01_data = precip_1983_01_extract %>%
   mutate(Month = '01', 
          Year = '1983')
 
+## The code below is for multiple .tif files
+setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_1980/')
 
+Precip_1980s = list.files(pattern = "*.tif") 
+Precip_1980s = lapply(Precip_1980s, raster::raster) 
+coords = latlong_generator(data_1980s)
+# Precip_1980_extract = lapply(Precip_1980s, 
+#                              raster::extract(Precip_1980s, LatLong))
+lapply(Precip_1980s, extract, y = LatLong)
+  
 # Wordclim historical bioclimatic data ------------------------------------
 ## Not going to work... averaged from the 70s-2000
 # 
