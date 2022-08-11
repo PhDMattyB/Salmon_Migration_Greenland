@@ -254,9 +254,23 @@ latlong_generator = function(data){
   
   LatLong = bind_cols(Long, Lat) %>%
     rename(Long = ...1,
-           Lat = ...2) %>%
-    na.omit()
+           Lat = ...2) 
+  # %>%
+  #   na.omit()
 }
+Data_per_decade = function(List_of_files){
+  raster_image = lapply(List_of_files, raster::raster) 
+  print('Gathering raster data')
+  extraction = lapply(raster_image, extract, y = coords)
+  print('Extracting environmental data')
+  bound = bind_cols(extraction)
+  print('Making a large data set')
+  decade_mean = apply(bound, 1, mean) %>% 
+    as_tibble()
+  print('Calculating mean')
+  return(decade_mean)
+}
+
 
 WG_df_metadata %>% 
   dplyr::select(year) %>% 
@@ -285,20 +299,6 @@ WG_df_metadata %>%
 
 ## The code below is for multiple .tif files
 setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_1980/')
-coords = latlong_generator(data_1980s)
-
-Data_per_decade = function(List_of_files){
-  raster_image = lapply(List_of_files, raster::raster) 
-  print('Gathering raster data')
-  extraction = lapply(raster_image, extract, y = coords)
-  print('Extracting environmental data')
-  bound = bind_cols(extraction)
-  print('Making a large data set')
-  decade_mean = apply(bound, 1, mean) %>% 
-    as_tibble()
-  print('Calculating mean')
-  return(decade_mean)
-}
 coords = WG_df_metadata %>% 
   filter(year %in% c('1983', 
                      '1984')) %>% 
@@ -333,7 +333,8 @@ setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_1990/')
 coords = WG_df_metadata %>% 
     filter(year %in% c('1996', 
                        '1997', 
-                       '1998')) %>% 
+                       '1998')) %>%
+  na.omit() %>% 
   latlong_generator()
 precip_files_90s = list.files(pattern = '*tif')
 mean_precip_90s = Data_per_decade(precip_files_90s)
@@ -348,14 +349,7 @@ Data_1990s = WG_df_metadata %>%
   dplyr::select(indiv, 
                 repunit, 
                 mixture_collection,
-                origin_id, 
-                Lat, 
-                Long)
-
-inner_join(Data_1990s, 
-           Clean_1990_precip, 
-           by = c('Lat', 
-                  'Long'))
+                origin_id) 
 
 Final_1990_Data = bind_cols(Data_1990s, 
                             Clean_1990_precip) %>% 
