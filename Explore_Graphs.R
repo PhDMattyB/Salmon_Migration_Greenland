@@ -301,7 +301,8 @@ WG_df_metadata %>%
 setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_1980/')
 coords = WG_df_metadata %>% 
   filter(year %in% c('1983', 
-                     '1984')) %>% 
+                     '1984')) %>%
+  na.omit() %>% 
   latlong_generator()
 precip_files_80s = list.files(pattern = "*.tif") 
 mean_precip_80s = Data_per_decade(precip_files_80s)
@@ -314,6 +315,7 @@ Clean_1980_precip = bind_cols(coords,
 # decade_mean = apply(bound, 1, mean) %>% 
 #   as_tibble()
 
+## Need to add temp data
 Data_1980s = WG_df_metadata %>%
   # filter(year == '1983')
   filter(year %in% c('1983', 
@@ -340,6 +342,9 @@ precip_files_90s = list.files(pattern = '*tif')
 mean_precip_90s = Data_per_decade(precip_files_90s)
 Clean_1990_precip = bind_cols(coords, 
                               mean_precip_90s)
+
+
+## Need to add temp data
 Data_1990s = WG_df_metadata %>%
   # filter(year == '1983')
   filter(year %in% c('1996', 
@@ -356,6 +361,37 @@ Final_1990_Data = bind_cols(Data_1990s,
   rename(Precipitation = value)
 
 
+setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_Upper_2000/')
+coords = WG_df_metadata %>% 
+  filter(year %in% c('2017', 
+                     '2018', 
+                     '2019', 
+                     '2020', 
+                     '2021')) %>%
+  na.omit() %>% 
+  latlong_generator()
+precip_files_2000s = list.files(pattern = '*tif')
+mean_precip_2000s = Data_per_decade(precip_files_2000s)
+Clean_Upper_2000_precip = bind_cols(coords, 
+                              mean_precip_2000s)
+
+## Need to add temp data
+Data_Upper_2000 = WG_df_metadata %>%
+  # filter(year == '1983')
+  filter(year %in% c('2017', 
+                     '2018', 
+                     '2019', 
+                     '2020', 
+                     '2021')) %>% 
+  na.omit() %>%
+  dplyr::select(indiv, 
+                repunit, 
+                mixture_collection,
+                origin_id) 
+
+Final_Upper_2000_Data = bind_cols(Data_Upper_2000, 
+                            Clean_Upper_2000_precip) %>% 
+  rename(Precipitation = value)
 
 
 # Wordclim historical bioclimatic data ------------------------------------
