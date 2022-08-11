@@ -263,32 +263,57 @@ latlong_generator = function(data){
 ## for each year for each variable. That's going to be a lot of
 ## mindless coding and function creating. 
 ## This code works for a single .tif file
-precip_1983_01 = raster::raster('wc2.1_2.5m_prec_1983-01.tif')
 
-data_1983 = WG_df_metadata %>% 
-  filter(year == '1983')
-
-coords = latlong_generator(data_1980s)
-
-precip_1983_01_extract = raster::extract(precip_1983_01, LatLong)
-
-precip_1983_01_data = precip_1983_01_extract %>% 
-  as_tibble() %>% 
-  rename(precip = value) %>% 
-  mutate(Month = '01', 
-         Year = '1983')
+# precip_1983_01 = raster::raster('wc2.1_2.5m_prec_1983-01.tif')
+# 
+# data_1983 = WG_df_metadata %>% 
+#   filter(year == '1983')
+# 
+# coords = latlong_generator(data_1980s)
+# 
+# precip_1983_01_extract = raster::extract(precip_1983_01, LatLong)
+# 
+# precip_1983_01_data = precip_1983_01_extract %>% 
+#   as_tibble() %>% 
+#   rename(precip = value) %>% 
+#   mutate(Month = '01', 
+#          Year = '1983')
 
 ## The code below is for multiple .tif files
 setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_1980/')
-
-Precip_1980s = list.files(pattern = "*.tif") 
-Precip_1980s = lapply(Precip_1980s, raster::raster) 
 coords = latlong_generator(data_1980s)
-Precip_1980s = lapply(Precip_1980s, extract, y = LatLong)
-Precip_1980s = bind_cols(Precip_1980s)
 
-Precip_1980s = bind_cols(LatLong, 
-                         Precip_1980s)
+Data_per_decade = function(List_of_files){
+  raster_image = lapply(List_of_files, raster::raster) 
+  print('Gathering raster data')
+  extraction = lapply(raster_image, extract, y = coords)
+  print('Extracting environmental data')
+  bound = bind_cols(extraction)
+  print('Making a large data set')
+  decade_mean = apply(bound, 1, mean) %>% 
+    as_tibble()
+  print('Calculating mean')
+  return(decade_mean)
+}
+precip_files_80s = list.files(pattern = "*.tif") 
+mean_precip_80s = Data_per_decade(precip_files_80s)
+
+Clean_1980_precip = bind_cols(coords, 
+                            mean_precip_80s)
+
+Data_1980s = WG_df_metadata %>%
+  # filter(year == '1983')
+  filter(year %in% c('1983', 
+                     '1984')) %>% 
+  na.omit() %>% 
+  dplyr::select(indiv, 
+                repunit, 
+                mixture_collection,
+                origin_id)
+
+Final_1980_Data = bind_cols(Data_1980s, 
+                            Clean_1980_data) %>% 
+  rename(Precipitation = value)
 
 # Wordclim historical bioclimatic data ------------------------------------
 ## Not going to work... averaged from the 70s-2000
