@@ -309,6 +309,9 @@ Data_1980s = WG_df_metadata %>%
 Final_1980_Data = bind_cols(Data_1980s, 
                             Environment_data_1980) 
 
+write_csv(Final_1980_Data, 
+          file = '~/Salmond_Migration_Paper/Worldclim_data/Worldclim_1980_Data.csv')
+
 
 setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_1990/')
 coords = WG_df_metadata %>% 
@@ -348,6 +351,9 @@ Data_1990s = WG_df_metadata %>%
 
 Final_1990_Data = bind_cols(Data_1990s, 
                             Environment_data_1990) 
+
+write_csv(Final_1990_Data, 
+          file = '~/Salmond_Migration_Paper/Worldclim_data/Worldclim_1990_Data.csv')
 
 
 setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_Upper_2000/')
@@ -394,6 +400,9 @@ Data_Upper_2000 = WG_df_metadata %>%
 
 Final_Upper_2000_Data = bind_cols(Data_Upper_2000, 
                             Environment_data_2000)
+
+write_csv(Final_Upper_2000_Data, 
+          file = '~/Salmond_Migration_Paper/Worldclim_data/Worldclim_Upper_2000_Data.csv')
 
 
 # Wordclim historical bioclimatic data ------------------------------------
