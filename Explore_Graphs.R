@@ -272,31 +272,6 @@ Data_per_decade = function(List_of_files){
 }
 
 
-WG_df_metadata %>% 
-  dplyr::select(year) %>% 
-  distinct()
-
-# precip_01 = raster::raster("wc2.1_30s_prec_01.tif") 
-## If we do it this way be have to come up with an average
-## for each year for each variable. That's going to be a lot of
-## mindless coding and function creating. 
-## This code works for a single .tif file
-
-# precip_1983_01 = raster::raster('wc2.1_2.5m_prec_1983-01.tif')
-# 
-# data_1983 = WG_df_metadata %>% 
-#   filter(year == '1983')
-# 
-# coords = latlong_generator(data_1980s)
-# 
-# precip_1983_01_extract = raster::extract(precip_1983_01, LatLong)
-# 
-# precip_1983_01_data = precip_1983_01_extract %>% 
-#   as_tibble() %>% 
-#   rename(precip = value) %>% 
-#   mutate(Month = '01', 
-#          Year = '1983')
-
 ## The code below is for multiple .tif files
 setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_1980/')
 coords = WG_df_metadata %>% 
@@ -309,11 +284,16 @@ mean_precip_80s = Data_per_decade(precip_files_80s)
 Clean_1980_precip = bind_cols(coords, 
                               mean_precip_80s)
 
-# raster_image = lapply(precip_files_80s, raster::raster) 
-# extraction = lapply(raster_image, extract, y = coords)
-# bound = bind_cols(extraction)
-# decade_mean = apply(bound, 1, mean) %>% 
-#   as_tibble()
+setwd('~/Salmond_Migration_Paper/Worldclim_data/Max_Temp_1980/')
+coords = WG_df_metadata %>% 
+  filter(year %in% c('1983', 
+                     '1984')) %>%
+  na.omit() %>% 
+  latlong_generator()
+max_temp_files_80s = list.files(pattern = "*.tif") 
+mean_max_temp_80s = Data_per_decade(max_temp_files_80s)
+Clean_1980_max_temp = bind_cols(coords, 
+                              mean_max_temp_80s)
 
 ## Need to add temp data
 Data_1980s = WG_df_metadata %>%
@@ -327,8 +307,14 @@ Data_1980s = WG_df_metadata %>%
                 origin_id)
 
 Final_1980_Data = bind_cols(Data_1980s, 
-                            Clean_1980_data) %>% 
-  rename(Precipitation = value)
+                            Clean_1980_precip,
+                            Clean_1980_max_temp) %>% 
+  dplyr::select(-Long...8, 
+                -Lat...9) %>% 
+  rename(Long = Long...5, 
+         Lat = Lat...6,
+         Precipitation = value...7, 
+         Max_temp = value...10)
 
 
 setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_1990/')
@@ -343,6 +329,17 @@ mean_precip_90s = Data_per_decade(precip_files_90s)
 Clean_1990_precip = bind_cols(coords, 
                               mean_precip_90s)
 
+setwd('~/Salmond_Migration_Paper/Worldclim_data/Max_Temp_1990/')
+coords = WG_df_metadata %>% 
+  filter(year %in% c('1996', 
+                     '1997', 
+                     '1998')) %>%
+  na.omit() %>% 
+  latlong_generator()
+max_temp_files_90s = list.files(pattern = "*.tif") 
+mean_max_temp_90s = Data_per_decade(max_temp_files_90s)
+Clean_1990_max_temp = bind_cols(coords, 
+                                mean_max_temp_90s)
 
 ## Need to add temp data
 Data_1990s = WG_df_metadata %>%
