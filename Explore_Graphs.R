@@ -281,8 +281,8 @@ coords = WG_df_metadata %>%
   latlong_generator()
 precip_files_80s = list.files(pattern = "*.tif") 
 mean_precip_80s = Data_per_decade(precip_files_80s)
-Clean_1980_precip = bind_cols(coords, 
-                              mean_precip_80s)
+# Clean_1980_precip = bind_cols(coords, 
+#                               mean_precip_80s)
 
 setwd('~/Salmond_Migration_Paper/Worldclim_data/Max_Temp_1980/')
 coords = WG_df_metadata %>% 
@@ -292,10 +292,14 @@ coords = WG_df_metadata %>%
   latlong_generator()
 max_temp_files_80s = list.files(pattern = "*.tif") 
 mean_max_temp_80s = Data_per_decade(max_temp_files_80s)
-Clean_1980_max_temp = bind_cols(coords, 
-                              mean_max_temp_80s)
+# Clean_1980_max_temp = bind_cols(coords, 
+#                               mean_max_temp_80s)
+Environment_data_1980 = bind_cols(coords, 
+                                  mean_precip_80s, 
+                                  mean_max_temp_80s) %>% 
+  rename(Precipitation = value...3, 
+         Max_temp = value...4)
 
-## Need to add temp data
 Data_1980s = WG_df_metadata %>%
   # filter(year == '1983')
   filter(year %in% c('1983', 
@@ -307,14 +311,7 @@ Data_1980s = WG_df_metadata %>%
                 origin_id)
 
 Final_1980_Data = bind_cols(Data_1980s, 
-                            Clean_1980_precip,
-                            Clean_1980_max_temp) %>% 
-  dplyr::select(-Long...8, 
-                -Lat...9) %>% 
-  rename(Long = Long...5, 
-         Lat = Lat...6,
-         Precipitation = value...7, 
-         Max_temp = value...10)
+                            Environment_data_1980) 
 
 
 setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_1990/')
@@ -326,8 +323,8 @@ coords = WG_df_metadata %>%
   latlong_generator()
 precip_files_90s = list.files(pattern = '*tif')
 mean_precip_90s = Data_per_decade(precip_files_90s)
-Clean_1990_precip = bind_cols(coords, 
-                              mean_precip_90s)
+# Clean_1990_precip = bind_cols(coords, 
+#                               mean_precip_90s)
 
 setwd('~/Salmond_Migration_Paper/Worldclim_data/Max_Temp_1990/')
 coords = WG_df_metadata %>% 
@@ -338,8 +335,14 @@ coords = WG_df_metadata %>%
   latlong_generator()
 max_temp_files_90s = list.files(pattern = "*.tif") 
 mean_max_temp_90s = Data_per_decade(max_temp_files_90s)
-Clean_1990_max_temp = bind_cols(coords, 
-                                mean_max_temp_90s)
+# Clean_1990_max_temp = bind_cols(coords, 
+#                                 mean_max_temp_90s)
+
+Environment_data_1990 = bind_cols(coords, 
+                                  mean_precip_90s, 
+                                  mean_max_temp_90s) %>% 
+  rename(Precipitation = value...3, 
+         Max_temp = value...4)
 
 ## Need to add temp data
 Data_1990s = WG_df_metadata %>%
@@ -354,8 +357,7 @@ Data_1990s = WG_df_metadata %>%
                 origin_id) 
 
 Final_1990_Data = bind_cols(Data_1990s, 
-                            Clean_1990_precip) %>% 
-  rename(Precipitation = value)
+                            Environment_data_1990) 
 
 
 setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_Upper_2000/')
@@ -369,8 +371,28 @@ coords = WG_df_metadata %>%
   latlong_generator()
 precip_files_2000s = list.files(pattern = '*tif')
 mean_precip_2000s = Data_per_decade(precip_files_2000s)
-Clean_Upper_2000_precip = bind_cols(coords, 
-                              mean_precip_2000s)
+# Clean_Upper_2000_precip = bind_cols(coords, 
+#                               mean_precip_2000s)
+
+setwd('~/Salmond_Migration_Paper/Worldclim_data/Max_Temp_1990/')
+coords = WG_df_metadata %>% 
+  filter(year %in% c('2017', 
+                     '2018', 
+                     '2019', 
+                     '2020', 
+                     '2021')) %>%
+  na.omit() %>% 
+  latlong_generator()
+max_temp_files_2000s = list.files(pattern = "*.tif") 
+mean_max_temp_2000s = Data_per_decade(max_temp_files_2000s)
+# Clean_1990_max_temp = bind_cols(coords, 
+#                                 mean_max_temp_90s)
+
+Environment_data_2000 = bind_cols(coords, 
+                                  mean_precip_2000s, 
+                                  mean_max_temp_2000s) %>% 
+  rename(Precipitation = value...3, 
+         Max_temp = value...4)
 
 ## Need to add temp data
 Data_Upper_2000 = WG_df_metadata %>%
@@ -387,8 +409,7 @@ Data_Upper_2000 = WG_df_metadata %>%
                 origin_id) 
 
 Final_Upper_2000_Data = bind_cols(Data_Upper_2000, 
-                            Clean_Upper_2000_precip) %>% 
-  rename(Precipitation = value)
+                            Environment_data_2000)
 
 
 # Wordclim historical bioclimatic data ------------------------------------
