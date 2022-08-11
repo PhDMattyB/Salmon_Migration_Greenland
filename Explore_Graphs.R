@@ -243,7 +243,7 @@ library(raster)
 setwd('~/Salmond_Migration_Paper/Worldclim_data/')
 
 latlong_generator = function(data){
-  LatLong = data_1980s %>%
+  LatLong = data %>%
     dplyr::select(Long,
                   Lat) %>%
     # arrange(Lat) %>%
@@ -257,6 +257,10 @@ latlong_generator = function(data){
            Lat = ...2) %>%
     na.omit()
 }
+
+WG_df_metadata %>% 
+  dplyr::select(year) %>% 
+  distinct()
 
 # precip_01 = raster::raster("wc2.1_30s_prec_01.tif") 
 ## If we do it this way be have to come up with an average
@@ -295,11 +299,20 @@ Data_per_decade = function(List_of_files){
   print('Calculating mean')
   return(decade_mean)
 }
+coords = WG_df_metadata %>% 
+  filter(year %in% c('1983', 
+                     '1984')) %>% 
+  latlong_generator()
 precip_files_80s = list.files(pattern = "*.tif") 
 mean_precip_80s = Data_per_decade(precip_files_80s)
-
 Clean_1980_precip = bind_cols(coords, 
-                            mean_precip_80s)
+                              mean_precip_80s)
+
+# raster_image = lapply(precip_files_80s, raster::raster) 
+# extraction = lapply(raster_image, extract, y = coords)
+# bound = bind_cols(extraction)
+# decade_mean = apply(bound, 1, mean) %>% 
+#   as_tibble()
 
 Data_1980s = WG_df_metadata %>%
   # filter(year == '1983')
@@ -314,6 +327,42 @@ Data_1980s = WG_df_metadata %>%
 Final_1980_Data = bind_cols(Data_1980s, 
                             Clean_1980_data) %>% 
   rename(Precipitation = value)
+
+
+setwd('~/Salmond_Migration_Paper/Worldclim_data/Precipitation_1990/')
+coords = WG_df_metadata %>% 
+    filter(year %in% c('1996', 
+                       '1997', 
+                       '1998')) %>% 
+  latlong_generator()
+precip_files_90s = list.files(pattern = '*tif')
+mean_precip_90s = Data_per_decade(precip_files_90s)
+Clean_1990_precip = bind_cols(coords, 
+                              mean_precip_90s)
+Data_1990s = WG_df_metadata %>%
+  # filter(year == '1983')
+  filter(year %in% c('1996', 
+                     '1997', 
+                     '1998')) %>% 
+  na.omit() %>%
+  dplyr::select(indiv, 
+                repunit, 
+                mixture_collection,
+                origin_id, 
+                Lat, 
+                Long)
+
+inner_join(Data_1990s, 
+           Clean_1990_precip, 
+           by = c('Lat', 
+                  'Long'))
+
+Final_1990_Data = bind_cols(Data_1990s, 
+                            Clean_1990_precip) %>% 
+  rename(Precipitation = value)
+
+
+
 
 # Wordclim historical bioclimatic data ------------------------------------
 ## Not going to work... averaged from the 70s-2000
